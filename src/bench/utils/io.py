@@ -24,9 +24,15 @@ def read_yaml(path: Union[str, Path]) -> dict:
 
 def write_yaml(data: dict, path: Union[str, Path]) -> None:
     """Write YAML config file."""
+    import json
+    
+    # Convert data to JSON-serializable format (handles numpy types)
+    json_str = json.dumps(data, default=str)
+    data_clean = json.loads(json_str)
+    
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w') as f:
-        yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+        yaml.dump(data_clean, f, default_flow_style=False, sort_keys=False)
 
 
 def ensure_dir(path: Union[str, Path]) -> Path:

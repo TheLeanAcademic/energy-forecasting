@@ -44,16 +44,28 @@ class SeasonalNaiveModel(BaseModel):
             
             # Generate future dates
             last_date = series_data["ds"].max()
-            freq = pd.infer_freq(series_data["ds"])
-            if freq is None:
-                # Fallback to computing median difference
-                freq = pd.to_timedelta(series_data["ds"].diff().median())
             
-            future_dates = pd.date_range(
-                start=last_date + pd.Timedelta(freq),
-                periods=horizon,
-                freq=freq
-            )
+            # Try to infer frequency
+            freq_str = pd.infer_freq(series_data["ds"])
+            
+            if freq_str:
+                # Use inferred frequency for date_range
+                future_dates = pd.date_range(
+                    start=last_date,
+                    periods=horizon + 1,
+                    freq=freq_str
+                )[1:]  # Skip first date (which is last_date)
+            else:
+                # Fallback: compute median time difference
+                time_diffs = series_data["ds"].diff()
+                median_diff = time_diffs.median()
+                
+                future_dates = []
+                current_date = last_date
+                for _ in range(horizon):
+                    current_date = current_date + median_diff
+                    future_dates.append(current_date)
+                future_dates = pd.DatetimeIndex(future_dates)
             
             pred_df = pd.DataFrame({
                 "series_id": series_id,
