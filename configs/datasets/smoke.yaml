@@ -1,0 +1,6 @@
+name: smoke
+frequency: H
+n_series: 10
+n_timesteps: 1000
+seed: 42
+description: "Synthetic dataset for smoke testing"
