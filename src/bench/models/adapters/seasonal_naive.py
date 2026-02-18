@@ -94,6 +94,8 @@ class SeasonalNaiveModel(BaseModel):
         quantiles: list[float]
     ) -> pd.DataFrame:
         """Generate quantile forecasts based on historical residuals."""
+        from scipy.stats import norm
+        
         quantile_dfs = []
         
         for series_id in predictions["series_id"].unique():
@@ -104,8 +106,8 @@ class SeasonalNaiveModel(BaseModel):
             series_pred = predictions[predictions["series_id"] == series_id].copy()
             
             for q in quantiles:
-                # Use normal approximation
-                z_score = np.percentile(np.random.standard_normal(1000), q * 100)
+                # Use proper z-score from normal distribution
+                z_score = norm.ppf(q)
                 col_name = f"q{int(q*100):02d}"
                 series_pred[col_name] = series_pred["yhat"] + z_score * residual_std
             
