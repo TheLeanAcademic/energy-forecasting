@@ -1,0 +1,3 @@
+name: seasonal_naive
+season_length: 24
+description: "Seasonal naive baseline (repeats last season)"

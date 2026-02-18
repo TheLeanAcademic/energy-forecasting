@@ -1,0 +1,23 @@
+name: suite_smoke
+description: "Smoke test suite for quick validation"
+
+# Datasets to benchmark
+datasets:
+  - name: smoke
+    horizon: 24
+    n_folds: 2
+
+# Models to evaluate
+models:
+  - name: seasonal_naive
+    mode: zero_shot
+
+# Suite-level defaults
+default_mode: zero_shot
+default_horizon: 24
+n_folds: 2
+initial_train_frac: 0.7
+limit_series: 10
+
+# Tracking
+tracking: none

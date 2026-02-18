@@ -1,0 +1,5 @@
+# Example terraform.tfvars file
+# Copy this to terraform.tfvars and customize
+
+# aws_region = "us-east-1"
+# environment = "dev"
